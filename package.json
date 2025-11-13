@@ -9,7 +9,9 @@
     "build": "yarn run typecheck && node esbuild.config.js production",
     "typecheck": "tsc --noEmit -skipLibCheck",
     "format": "prettier . --write",
-    "version": "node version-bump.js && git add manifest.json versions.json && yarn run format"
+    "version": "node version-bump.js && git add manifest.json versions.json && yarn run format",
+    "test": "node --import=tsx --test 'src/**/*.test.ts'",
+    "test:watch": "node --import=tsx --test --watch 'src/**/*.test.ts'"
   },
   "repository": {
     "type": "git",
@@ -28,6 +30,7 @@
     "obsidian": "^1.10.3",
     "prettier": "^3.6.2",
     "tslib": "^2.8.1",
+    "tsx": "^4.20.6",
     "typescript": "^5.9.3"
   },
   "packageManager": "yarn@4.11.0",

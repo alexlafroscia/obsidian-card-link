@@ -1,8 +1,9 @@
 import { App, parseYaml, Notice, ButtonComponent, getLinkpath } from "obsidian";
 
 import { YamlParseError, NoRequiredParamsError } from "src/errors";
-import { LinkMetadata } from "src/interfaces";
+import { LinkMetadataWithIndent } from "src/interfaces";
 import { CheckIf } from "./checkif";
+import { parseLinkMetadataFromJSON } from "./code_block_parser";
 
 export class CodeBlockProcessor {
   app: App;
@@ -13,7 +14,7 @@ export class CodeBlockProcessor {
 
   async run(source: string, el: HTMLElement) {
     try {
-      const data = this.parseLinkMetadataFromYaml(source);
+      const data = this.resolveLinkMetadataFromYaml(source);
       el.appendChild(this.genLinkEl(data));
     } catch (error) {
       if (error instanceof NoRequiredParamsError) {
@@ -31,9 +32,7 @@ export class CodeBlockProcessor {
     }
   }
 
-  private parseLinkMetadataFromYaml(source: string): LinkMetadata {
-    let yaml: Partial<LinkMetadata>;
-
+  private resolveLinkMetadataFromYaml(source: string): LinkMetadataWithIndent {
     let indent = -1;
     source = source
       .split(/\r?\n|\r|\n/g)
@@ -48,28 +47,10 @@ export class CodeBlockProcessor {
       )
       .join("\n");
 
-    try {
-      yaml = parseYaml(source) as Partial<LinkMetadata>;
-    } catch (error) {
-      console.log(error);
-      throw new YamlParseError(
-        "failed to parse yaml. Check debug console for more detail.",
-      );
-    }
-
-    if (!yaml || !yaml.url || !yaml.title) {
-      throw new NoRequiredParamsError(
-        "required params[url, title] are not found.",
-      );
-    }
+    const json = parseYaml(source);
 
     return {
-      url: yaml.url,
-      title: yaml.title,
-      description: yaml.description,
-      host: yaml.host,
-      favicon: yaml.favicon,
-      image: yaml.image,
+      ...parseLinkMetadataFromJSON(json),
       indent,
     };
   }
@@ -85,7 +66,7 @@ export class CodeBlockProcessor {
     return containerEl;
   }
 
-  private genLinkEl(data: LinkMetadata): HTMLElement {
+  private genLinkEl(data: LinkMetadataWithIndent): HTMLElement {
     const containerEl = document.createElement("div");
     containerEl.addClass("auto-card-link-container");
     containerEl.setAttr("data-auto-card-link-depth", data.indent);

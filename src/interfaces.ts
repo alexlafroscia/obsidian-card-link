@@ -5,5 +5,8 @@ export interface LinkMetadata {
   host?: string;
   favicon?: string;
   image?: string;
+}
+
+export interface LinkMetadataWithIndent extends LinkMetadata {
   indent: number;
 }

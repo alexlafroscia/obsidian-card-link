@@ -1,4 +1,4 @@
-import { LinkMetadata } from "src/interfaces";
+import { LinkMetadataWithIndent } from "src/interfaces";
 
 export class LinkMetadataParser {
   url: string;
@@ -12,7 +12,7 @@ export class LinkMetadataParser {
     this.htmlDoc = htmlDoc;
   }
 
-  async parse(): Promise<LinkMetadata | undefined> {
+  async parse(): Promise<LinkMetadataWithIndent | undefined> {
     const title = this.getTitle()
       ?.replace(/\r\n|\n|\r/g, "")
       .replace(/\\/g, "\\\\")
