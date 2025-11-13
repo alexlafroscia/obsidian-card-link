@@ -6,10 +6,9 @@
   "type": "module",
   "scripts": {
     "dev": "node esbuild.config.js",
-    "build": "tsc -noEmit -skipLibCheck && node esbuild.config.js production",
-    "lint": "tsc --noEmit -skipLibCheck && eslint . --ext .ts",
+    "build": "yarn run typecheck && node esbuild.config.js production",
+    "typecheck": "tsc --noEmit -skipLibCheck",
     "format": "prettier . --write",
-    "fix": "eslint . --fix --ext .ts",
     "version": "node version-bump.js && git add manifest.json versions.json && yarn run format"
   },
   "repository": {
@@ -24,11 +23,8 @@
   "homepage": "https://github.com/nekoshita/obsidian-auto-card-link#readme",
   "devDependencies": {
     "@types/node": "^24.10.1",
-    "@typescript-eslint/eslint-plugin": "^5.17.0",
-    "@typescript-eslint/parser": "^5.17.0",
     "builtin-modules": "^3.2.0",
     "esbuild": "0.17.3",
-    "eslint": "^8.12.0",
     "obsidian": "^1.10.3",
     "prettier": "^3.6.2",
     "typescript": "^5.9.3"
