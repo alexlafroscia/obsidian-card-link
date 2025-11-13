@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/nekoshita/obsidian-auto-card-link#readme",
   "dependencies": {
+    "true-myth": "^9.2.0",
     "zod": "^4.1.12"
   },
   "devDependencies": {

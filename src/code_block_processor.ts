@@ -1,9 +1,10 @@
 import { App, parseYaml, Notice, ButtonComponent, getLinkpath } from "obsidian";
 import * as z from "zod/mini";
+import type { ParseResult } from "true-myth/standard-schema";
 
-import type { LinkMetadataWithIndent } from "src/types";
 import { CheckIf } from "./checkif";
 import { parseLinkMetadataFromJSON } from "./code_block_parser";
+import type { LinkMetadata, LinkMetadataWithIndent } from "./types";
 
 function measureIndent(source: string): number {
   let indent = -1;
@@ -33,10 +34,10 @@ export class CodeBlockProcessor {
   async run(source: string, el: HTMLElement) {
     const data = this.resolveLinkMetadataFromYaml(source);
 
-    if (data.success) {
+    if (data.isOk) {
       el.appendChild(
         this.genLinkEl({
-          ...data.data,
+          ...data.value,
           indent: measureIndent(source),
         }),
       );
@@ -45,10 +46,14 @@ export class CodeBlockProcessor {
     }
   }
 
-  private resolveLinkMetadataFromYaml(source: string) {
+  private resolveLinkMetadataFromYaml(
+    source: string,
+  ): ParseResult<LinkMetadata> {
     const json = parseYaml(source);
 
-    return parseLinkMetadataFromJSON(json);
+    return parseLinkMetadataFromJSON(json).map((value) => {
+      return value;
+    });
   }
 
   private genErrorEl(errorMsg: string): HTMLElement {

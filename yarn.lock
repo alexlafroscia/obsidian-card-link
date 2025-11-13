@@ -1103,6 +1103,7 @@ __metadata:
     esbuild: "npm:0.17.3"
     obsidian: "npm:^1.10.3"
     prettier: "npm:^3.6.2"
+    true-myth: "npm:^9.2.0"
     tslib: "npm:^2.8.1"
     tsx: "npm:^4.20.6"
     typescript: "npm:^5.9.3"
@@ -1346,6 +1347,13 @@ __metadata:
     fdir: "npm:^6.5.0"
     picomatch: "npm:^4.0.3"
   checksum: 10c0/869c31490d0d88eedb8305d178d4c75e7463e820df5a9b9d388291daf93e8b1eb5de1dad1c1e139767e4269fe75f3b10d5009b2cc14db96ff98986920a186844
+  languageName: node
+  linkType: hard
+
+"true-myth@npm:^9.2.0":
+  version: 9.2.0
+  resolution: "true-myth@npm:9.2.0"
+  checksum: 10c0/99076144b12def3ec6fd922443f2bc811bec0a654e188356ebf04d8ffdaa66bf4e6bed92fc1304150da0c3df58d0ae659688972b078d21ca11b90a36f9be9bd6
   languageName: node
   linkType: hard
 

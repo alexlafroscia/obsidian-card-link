@@ -1,5 +1,9 @@
+import { parserFor } from "true-myth/standard-schema";
+
 import { LinkMetadata } from "./types";
 
-export function parseLinkMetadataFromJSON(linkMetadata: any) {
-  return LinkMetadata.safeParse(linkMetadata);
+const codeblockContentsParser = parserFor(LinkMetadata);
+
+export function parseLinkMetadataFromJSON(linkMetadata: unknown) {
+  return codeblockContentsParser(linkMetadata);
 }
