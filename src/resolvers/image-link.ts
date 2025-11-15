@@ -1,28 +1,32 @@
 import { App, getLinkpath } from "obsidian";
-import Maybe, { just, nothing } from "true-myth/maybe";
+import Result, { ok, err } from "true-myth/result";
 
 import { ImageLink } from "../schema/image-link";
 
-function resolveInternalImageLink(link: string, app: App): Maybe<string> {
+function resolveInternalImageLink(
+  link: string,
+  app: App,
+): Result<string, string> {
+  const linkPath = getLinkpath(link);
   const imageRelativePath = app.metadataCache.getFirstLinkpathDest(
-    getLinkpath(link),
+    linkPath,
     "",
   )?.path;
 
   if (!imageRelativePath) {
-    return nothing<string>();
+    return err(`Could not resolve image path \`${linkPath}\``);
   }
 
-  return just(app.vault.adapter.getResourcePath(imageRelativePath));
+  return ok(app.vault.adapter.getResourcePath(imageRelativePath));
 }
 
 export function resolveImageLink(
   imageLink: ImageLink,
   app: App,
-): Maybe<string> {
+): Result<string, string> {
   switch (imageLink.type) {
     case "external":
-      return just(imageLink.value);
+      return ok(imageLink.value);
     case "internal":
       return resolveInternalImageLink(imageLink.value, app);
   }

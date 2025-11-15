@@ -1,6 +1,6 @@
-import { App, Keymap } from "obsidian";
+import { App, Keymap, TFile } from "obsidian";
+import Result, { ok, err } from "true-myth/result";
 import Task, { fromPromise, reject } from "true-myth/task";
-import { ok } from "true-myth/result";
 
 import {
   type FileEmbedContents,
@@ -11,24 +11,35 @@ import { resolveImageLink } from "./image-link";
 
 type InternalLinkProps = Omit<FullInternalLinkProps, "indent">;
 
-export function resolveFileCardProps(
+export function resolveFileReference(
   value: FileEmbedContents,
   app: App,
-): Task<InternalLinkProps, string> {
-  const { file } = value;
-
+): Result<TFile, string> {
   const sourceFile = app.workspace.getActiveFile();
-  const referencedFile = app.metadataCache.getFirstLinkpathDest(
-    file,
+  const file = app.metadataCache.getFirstLinkpathDest(
+    value.file,
     sourceFile!.path,
   );
 
-  if (!referencedFile) {
-    return reject(`Could not resolve file \`${file}\``);
+  if (!file) {
+    return err(`Could not resolve file \`${file}\``);
   }
 
+  return ok(file);
+}
+
+export function makeOnClickHandler(file: TFile, app: App) {
+  return function (event: MouseEvent) {
+    app.workspace.getLeaf(Keymap.isModEvent(event)).openFile(file);
+  };
+}
+
+export function resolveFileCardProps(
+  file: TFile,
+  app: App,
+): Task<InternalLinkProps, string> {
   const resolveFrontmatter = new Promise<{ url: string }>((resolve) => {
-    app.fileManager.processFrontMatter(referencedFile, (frontmatter) => {
+    app.fileManager.processFrontMatter(file, (frontmatter) => {
       resolve(frontmatter);
     });
   });
@@ -39,7 +50,7 @@ export function resolveFileCardProps(
   return resolveFrontmatterTask
     .andThen((frontmatter) =>
       parseLinkEmbedContents({
-        title: referencedFile.basename,
+        title: file.basename,
         ...frontmatter,
       }),
     )
@@ -58,10 +69,6 @@ export function resolveFileCardProps(
     .map((linkProps) => ({
       ...linkProps,
 
-      onClick: (event) => {
-        app.workspace
-          .getLeaf(Keymap.isModEvent(event))
-          .openFile(referencedFile);
-      },
+      onClick: makeOnClickHandler(file, app),
     }));
 }

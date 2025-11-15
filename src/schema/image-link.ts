@@ -1,6 +1,7 @@
 import * as z from "zod/mini";
 
 import { InternalLink } from "./internal-link";
+import { makeSchemaParser } from "./make-schema-parser";
 
 export const InternalImageLink = z.codec(
   InternalLink,
@@ -40,3 +41,5 @@ export const ImageLink = z.union(
 );
 
 export type ImageLink = z.infer<typeof ImageLink>;
+
+export const parseImageLink = makeSchemaParser(ImageLink);

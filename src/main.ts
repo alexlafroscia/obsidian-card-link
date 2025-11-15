@@ -11,6 +11,8 @@ import { CodeBlockGenerator } from "src/code_block_generator";
 import { CodeBlockProcessor } from "src/code_block_processor";
 import { linkRegex } from "src/regex";
 
+import { FileCardListView } from "./bases-views/file-card-list";
+
 export default class ObsidianAutoCardLink extends Plugin {
   settings?: ObsidianAutoCardLinkSettings;
 
@@ -20,6 +22,12 @@ export default class ObsidianAutoCardLink extends Plugin {
     this.registerMarkdownCodeBlockProcessor("cardlink", async (source, el) => {
       const processor = new CodeBlockProcessor(this.app);
       await processor.run(source, el);
+    });
+
+    this.registerBasesView("file-card-list", {
+      name: "File Card List",
+      icon: "link",
+      factory: (controller, el) => new FileCardListView(controller, el),
     });
 
     this.addCommand({
