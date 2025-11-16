@@ -1,6 +1,8 @@
 import { App, Keymap, TFile } from "obsidian";
-import Result, { ok, err } from "true-myth/result";
-import Task, { fromPromise, reject } from "true-myth/task";
+import { of as maybeOf } from "true-myth/maybe";
+import Result, { ok } from "true-myth/result";
+import Task, { fromPromise } from "true-myth/task";
+import { fromMaybe } from "true-myth/toolbelt";
 
 import {
   type FileEmbedContents,
@@ -15,17 +17,19 @@ export function resolveFileReference(
   value: FileEmbedContents,
   app: App,
 ): Result<TFile, string> {
-  const sourceFile = app.workspace.getActiveFile();
-  const file = app.metadataCache.getFirstLinkpathDest(
-    value.file,
-    sourceFile!.path,
-  );
+  const { file: identifier } = value;
 
-  if (!file) {
-    return err(`Could not resolve file \`${file}\``);
-  }
+  const sourceFile = maybeOf(app.workspace.getActiveFile());
+  const file =
+    typeof identifier === "string"
+      ? sourceFile
+      : sourceFile.andThen(({ path }) =>
+          maybeOf(
+            app.metadataCache.getFirstLinkpathDest(identifier.value, path),
+          ),
+        );
 
-  return ok(file);
+  return fromMaybe(`Could not resolve file \`${file}\``, file);
 }
 
 export function makeOnClickHandler(file: TFile, app: App) {

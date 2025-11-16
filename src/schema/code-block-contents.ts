@@ -5,7 +5,7 @@ import { InternalLink } from "./internal-link";
 import { ImageLink } from "./image-link";
 
 export const FileEmbedContents = z.object({
-  file: InternalLink,
+  file: z.union([z.literal("self"), InternalLink]),
 });
 
 export type FileEmbedContents = z.infer<typeof FileEmbedContents>;

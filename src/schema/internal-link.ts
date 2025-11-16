@@ -24,7 +24,21 @@ const UnquotedInternalLink = z.pipe(
   }),
 );
 
-export const InternalLink = z.union(
-  [QuotedInternalLink, UnquotedInternalLink],
-  "Value must be an internal Obsidian link",
+export const InternalLink = z.codec(
+  z.union(
+    [QuotedInternalLink, UnquotedInternalLink],
+    "Value must be an internal Obsidian link",
+  ),
+  z.object({
+    type: z.literal("internal"),
+    value: z.string(),
+  }),
+  {
+    decode(value) {
+      return { type: "internal" as const, value };
+    },
+    encode(value) {
+      return `"[[${value}]]"`;
+    },
+  },
 );
