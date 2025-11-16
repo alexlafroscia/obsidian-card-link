@@ -51,28 +51,41 @@ export function resolveFileCardProps(
     () => `Frontmatter could not be resolved`,
   );
 
-  return resolveFrontmatterTask
-    .andThen((frontmatter) =>
-      parseLinkEmbedContents({
-        title: file.basename,
+  return (
+    resolveFrontmatterTask
+      // Extract card props from file frontmatter
+      .andThen((frontmatter) =>
+        parseLinkEmbedContents({
+          title: file.basename,
+          ...frontmatter,
+        }),
+      )
+      // Compute a `host` from the `url` if not explicitly provided
+      .map((frontmatter) => ({
         ...frontmatter,
-      }),
-    )
-    .andThen((contents) => {
-      return ok({
-        ...contents,
 
-        image: contents.image
-          ? resolveImageLink(contents.image, app).unwrapOr(undefined)
-          : undefined,
-        favicon: contents.favicon
-          ? resolveImageLink(contents.favicon, app).unwrapOr(undefined)
-          : undefined,
-      });
-    })
-    .map((linkProps) => ({
-      ...linkProps,
+        host: maybeOf(frontmatter.host).unwrapOrElse(() => {
+          const parsedUrl = new URL(frontmatter.url);
 
-      onClick: makeOnClickHandler(file, app),
-    }));
+          return parsedUrl.hostname;
+        }),
+      }))
+      // Resolve external image links to a renderable URL
+      .map((frontmatter) => ({
+        ...frontmatter,
+
+        image: frontmatter.image
+          ? resolveImageLink(frontmatter.image, app).unwrapOr(undefined)
+          : undefined,
+        favicon: frontmatter.favicon
+          ? resolveImageLink(frontmatter.favicon, app).unwrapOr(undefined)
+          : undefined,
+      }))
+      // Add click handler to open the file
+      .map((cardProps) => ({
+        ...cardProps,
+
+        onClick: makeOnClickHandler(file, app),
+      }))
+  );
 }

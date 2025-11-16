@@ -50,7 +50,7 @@ export function resolveBasesEntryCardProps(
   const url = urlResult.unwrapOr(undefined);
 
   const host = getValueForProperty("host", config, entry)
-    .or(
+    .orElse(() =>
       urlResult.map((url) => {
         const parsedUrl = new URL(url);
 
