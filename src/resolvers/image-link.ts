@@ -1,6 +1,7 @@
 import { App, getLinkpath } from "obsidian";
 import Result, { ok, err } from "true-myth/result";
 
+import { LinkEmbedContents } from "../schema/code-block-contents";
 import { ImageLink } from "../schema/image-link";
 
 function resolveInternalImageLink(
@@ -30,4 +31,17 @@ export function resolveImageLink(
     case "internal":
       return resolveInternalImageLink(imageLink.value, app);
   }
+}
+
+type ImageProperties = Pick<LinkEmbedContents, "image" | "favicon">;
+
+export function resolveImageProperties(props: ImageProperties, app: App) {
+  const { image, favicon } = props;
+
+  return {
+    image: image ? resolveImageLink(image, app).unwrapOr(undefined) : undefined,
+    favicon: favicon
+      ? resolveImageLink(favicon, app).unwrapOr(undefined)
+      : undefined,
+  };
 }

@@ -5,9 +5,9 @@ interface CommonLinkProps {
   indent: number;
 
   description?: string;
-  favicon?: string;
+  favicon?: string | undefined;
   host?: string;
-  image?: string;
+  image?: string | undefined;
 }
 
 export interface ExternalLinkProps extends CommonLinkProps {

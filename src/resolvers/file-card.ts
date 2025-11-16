@@ -1,6 +1,6 @@
 import { App, Keymap, TFile } from "obsidian";
 import { of as maybeOf } from "true-myth/maybe";
-import Result, { ok } from "true-myth/result";
+import Result from "true-myth/result";
 import Task, { fromPromise } from "true-myth/task";
 import { fromMaybe } from "true-myth/toolbelt";
 
@@ -9,7 +9,8 @@ import {
   parseLinkEmbedContents,
 } from "../schema/code-block-contents";
 import type { InternalLinkProps as FullInternalLinkProps } from "../components/link-card";
-import { resolveImageLink } from "./image-link";
+import { resolveImageProperties } from "./image-link";
+import { ensureFaviconHasHost } from "./common";
 
 type InternalLinkProps = Omit<FullInternalLinkProps, "indent">;
 
@@ -73,13 +74,15 @@ export function resolveFileCardProps(
       // Resolve external image links to a renderable URL
       .map((frontmatter) => ({
         ...frontmatter,
+        ...resolveImageProperties(frontmatter, app),
+      }))
+      // Resolve the favicon relative to `url` if necessary
+      .map(({ url, favicon, ...rest }) => ({
+        ...rest,
 
-        image: frontmatter.image
-          ? resolveImageLink(frontmatter.image, app).unwrapOr(undefined)
-          : undefined,
-        favicon: frontmatter.favicon
-          ? resolveImageLink(frontmatter.favicon, app).unwrapOr(undefined)
-          : undefined,
+        favicon: maybeOf(favicon)
+          .map((favicon) => ensureFaviconHasHost(favicon, url))
+          .unwrapOr(undefined),
       }))
       // Add click handler to open the file
       .map((cardProps) => ({
