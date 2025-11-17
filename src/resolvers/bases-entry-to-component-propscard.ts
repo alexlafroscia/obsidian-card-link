@@ -6,10 +6,11 @@ import {
   getAsValidPropertyId,
 } from "../bases-views/file-card-list-config";
 import type { FileCardProps } from "../components/file-card";
-import { parseImageLink } from "../schema/image-link";
+import { parseCard } from "../schema/card";
 
+import { enhanceCard } from "./card";
 import { makeOnClickHandler } from "./file-to-component-props";
-import { resolveImageLink } from "./image-link";
+import { resolveImageProperties } from "./image-link";
 
 function getValue(
   entry: BasesEntry,
@@ -42,23 +43,13 @@ export function resolveBasesEntryCardProps(
   entry: BasesEntry,
   config: BasesViewConfig,
   app: App,
-): FileCardProps {
+): Result<FileCardProps, string> {
   const { file } = entry;
 
   const title = getValueForProperty("title", config, entry).unwrapOr("");
 
-  const urlResult = getValueForProperty("url", config, entry);
-  const url = urlResult.unwrapOr(undefined);
-
-  const host = getValueForProperty("host", config, entry)
-    .orElse(() =>
-      urlResult.map((url) => {
-        const parsedUrl = new URL(url);
-
-        return parsedUrl.hostname;
-      }),
-    )
-    .unwrapOr(undefined);
+  const url = getValueForProperty("url", config, entry).unwrapOr(undefined);
+  const host = getValueForProperty("host", config, entry).unwrapOr(undefined);
 
   const description = getValueForProperty(
     "description",
@@ -66,23 +57,17 @@ export function resolveBasesEntryCardProps(
     entry,
   ).unwrapOr(undefined);
 
-  const image = getValueForProperty("image", config, entry)
-    .andThen((imagePropertyValue) => parseImageLink(imagePropertyValue))
-    .andThen((imageLink) => resolveImageLink(imageLink, app))
-    .unwrapOr(undefined);
-
-  const favicon = getValueForProperty("favicon", config, entry)
-    .andThen((imagePropertyValue) => parseImageLink(imagePropertyValue))
-    .andThen((imageLink) => resolveImageLink(imageLink, app))
-    .unwrapOr(undefined);
-
-  return {
+  return parseCard({
     title,
     url,
     host,
     description,
-    image,
-    favicon,
+    image: getValueForProperty("image", config, entry).unwrapOr(undefined),
+    favicon: getValueForProperty("favicon", config, entry).unwrapOr(undefined),
+  }).map((card) => ({
+    ...card,
+    ...enhanceCard(card),
+    ...resolveImageProperties(card, app),
     onClick: makeOnClickHandler(file, app),
-  } satisfies FileCardProps;
+  }));
 }

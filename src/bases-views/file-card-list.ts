@@ -1,7 +1,8 @@
 import { BasesView, QueryController } from "obsidian";
 
 import { createFileCard } from "../components/file-card";
-import { resolveBasesEntryCardProps } from "../resolvers/bases-entry-card";
+import { createErrorCard } from "../components/error-card";
+import { resolveBasesEntryCardProps } from "../resolvers/bases-entry-to-component-propscard";
 
 export class FileCardListView extends BasesView {
   type = "FileCardListView";
@@ -17,7 +18,11 @@ export class FileCardListView extends BasesView {
   onDataUpdated() {
     const cardElements = this.data.data
       .map((entry) => resolveBasesEntryCardProps(entry, this.config, this.app))
-      .map((props) => createFileCard(props))
+      .map((result) =>
+        result
+          .map((props) => createFileCard(props))
+          .unwrapOrElse((error) => createErrorCard(error)),
+      )
       // Insert a paragraph between each card to act as a spacer
       .flatMap((cardElement, index) => {
         if (index === 0) {
