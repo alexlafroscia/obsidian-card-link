@@ -37,13 +37,13 @@ export class LinkMetadataParser {
       host: hostname,
       favicon: favicon
         ? {
-            type: "external",
+            type: "absolute",
             value: favicon,
           }
         : undefined,
       image: image
         ? {
-            type: "external",
+            type: "absolute",
             value: image,
           }
         : undefined,

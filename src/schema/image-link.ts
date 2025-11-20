@@ -3,15 +3,38 @@ import * as z from "zod/mini";
 import { InternalLink } from "./internal-link";
 import { makeSchemaParser } from "./make-schema-parser";
 
-const ExternalImageLink = z.codec(
-  z.url("Value must be a URL"),
+const AbsoluteExternalImageLink = z.codec(
+  z.url("Value must be an absolute URL"),
   z.object({
-    type: z.literal("external"),
-    value: z.url(),
+    type: z.literal("absolute"),
+    value: z.httpUrl(),
   }),
   {
     decode(value) {
-      return { type: "external" as const, value };
+      return { type: "absolute" as const, value };
+    },
+    encode({ value }) {
+      return value;
+    },
+  },
+);
+
+export const URLPath = z.templateLiteral(
+  ["/", z.string()],
+  "Value must be a URL path (`/...`)",
+);
+
+export type URLPath = z.infer<typeof URLPath>;
+
+export const RelativeExternalImageLink = z.codec(
+  URLPath,
+  z.object({
+    type: z.literal("relative"),
+    value: URLPath,
+  }),
+  {
+    decode(value) {
+      return { type: "relative" as const, value };
     },
     encode({ value }) {
       return value;
@@ -20,8 +43,8 @@ const ExternalImageLink = z.codec(
 );
 
 export const ImageLink = z.union(
-  [InternalLink, ExternalImageLink],
-  "Value must be an external image URL or an internal image link",
+  [InternalLink, AbsoluteExternalImageLink, RelativeExternalImageLink],
+  "Value must be an image URL or internal link",
 );
 
 export type ImageLink = z.infer<typeof ImageLink>;
