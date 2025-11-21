@@ -1,7 +1,7 @@
 {
   "id": "auto-card-link",
   "name": "Auto Card Link",
-  "version": "2.0.0-beta.8",
+  "version": "2.0.0-beta.9",
   "minAppVersion": "1.10.0",
   "description": "Automatically fetches metadata from a url and makes it as a card-styled link",
   "author": "Nekoshita Yuki",
