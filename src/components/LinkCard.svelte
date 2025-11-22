@@ -3,10 +3,12 @@
 
   import type { CommonCardProps } from "./common";
 
+  export type LinkCardProps = CommonCardProps;
+
   import CardContents from "./CardContents.svelte";
   import CardContainer from "./CardContainer.svelte";
 
-  let cardProps: CommonCardProps = $props();
+  let cardProps: LinkCardProps = $props();
 
   let href = cardProps.url
     .match<Maybe<string>>({

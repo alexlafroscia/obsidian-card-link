@@ -8,9 +8,9 @@ import {
 import { EditorExtensions } from "src/editor_enhancements";
 import { CheckIf } from "src/checkif";
 import { CodeBlockGenerator } from "src/code_block_generator";
-import { CodeBlockProcessor } from "src/code_block_processor";
 import { linkRegex } from "src/regex";
 
+import { CodeBlockProcessor } from "./codeblock/processor";
 import { FileCardListView } from "./bases-views/file-card-list.svelte";
 import { getViewOptions } from "./bases-views/file-card-list-config";
 
@@ -22,9 +22,12 @@ export default class ObsidianAutoCardLink extends Plugin {
 
     this.registerMarkdownCodeBlockProcessor(
       "cardlink",
-      async (source, el, context) => {
+      async (source, containerEl, context) => {
         context.addChild(
-          new CodeBlockProcessor(source, el, context.sourcePath, this.app),
+          new CodeBlockProcessor(source, context.sourcePath, {
+            containerEl,
+            app: this.app,
+          }),
         );
       },
     );
