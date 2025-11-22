@@ -11,7 +11,7 @@ import {
   type ConfigKey,
   getAsValidPropertyId,
 } from "../../bases-views/file-card-list-config";
-import type { FileCardProps } from "../../components/FileCard.svelte";
+import type { FileCard } from "../../components/common";
 import {
   type Card,
   getFailureResultMessages,
@@ -75,7 +75,7 @@ export function resolveBasesEntryCardProps(
   entry: BasesEntry,
   config: BasesViewConfig,
   app: App,
-): FileCardProps {
+): FileCard {
   const card = extractCardFromBasesEntry(entry, config);
   const { file } = entry;
 

@@ -1,14 +1,14 @@
 <script lang="ts" module>
-  import type { CardProp, CommonCardProps } from "./common";
+  import type { CardProp, LinkCard } from "./common";
   import Error from "./Error.svelte";
 
-  type CardPropErrors = Record<keyof CommonCardProps, string[]>;
+  type CardPropErrors = Record<keyof LinkCard, string[]>;
 
   function extractPropErrors(prop: CardProp): string[] {
     return prop.isErr ? prop.error : [];
   }
 
-  function extractErrors(card: CommonCardProps): CardPropErrors {
+  function extractErrors(card: LinkCard): CardPropErrors {
     return {
       title: extractPropErrors(card.title),
       description: extractPropErrors(card.description),
@@ -20,11 +20,17 @@
 </script>
 
 <script lang="ts">
-  let cardProps: CommonCardProps = $props();
+  interface Props {
+    card: LinkCard;
+  }
 
-  let entries = Object.entries(extractErrors(cardProps))
-    // Remove entries without any errors
-    .filter(([_property, errors]) => errors.length > 0);
+  let { card }: Props = $props();
+
+  let entries = $derived(
+    Object.entries(extractErrors(card))
+      // Remove entries without any errors
+      .filter(([_property, errors]) => errors.length > 0)
+  );
 </script>
 
 <Error>

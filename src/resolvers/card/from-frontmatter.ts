@@ -4,8 +4,7 @@ import Result from "true-myth/result";
 import Task, { fromPromise } from "true-myth/task";
 import { fromMaybe } from "true-myth/toolbelt";
 
-import type { FileCardProps } from "../../components/FileCard.svelte";
-import type { FileEmbedContents } from "../../schema/code-block-contents";
+import type { FileCard } from "../../components/common";
 import type { InternalLink } from "../../schema/internal-link";
 
 import { parseCardStructure } from "../../schema/card-structure";
@@ -36,7 +35,7 @@ export function makeOnClickHandler(file: TFile, app: App) {
 export function resolveFileCardProps(
   file: TFile,
   app: App,
-): Task<FileCardProps, string[]> {
+): Task<FileCard, string[]> {
   const resolveFrontmatter = new Promise((resolve) => {
     app.fileManager.processFrontMatter(file, (frontmatter) => {
       resolve(frontmatter);

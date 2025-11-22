@@ -1,8 +1,9 @@
 <script lang="ts" module>
-  import FileCard, { type FileCardProps } from "./FileCard.svelte";
+  import type { FileCard as FileCardModel } from "./common";
+  import FileCard from "./FileCard.svelte";
 
   export interface Props {
-    cards: FileCardProps[];
+    cards: FileCardModel[];
   }
 </script>
 
@@ -13,7 +14,7 @@
 <ul>
   {#each cards as card}
     <li>
-      <FileCard {...card} />
+      <FileCard {card} />
     </li>
   {/each}
 </ul>

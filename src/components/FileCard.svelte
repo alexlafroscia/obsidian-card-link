@@ -1,8 +1,8 @@
 <script lang="ts" module>
-  import type { CommonCardProps } from "./common";
+  import type { FileCard } from "./common";
 
-  export interface FileCardProps extends CommonCardProps {
-    onClick: (event: MouseEvent) => void;
+  export interface Props {
+    card: FileCard;
   }
 </script>
 
@@ -12,13 +12,13 @@
   import CardContainer from "./CardContainer.svelte";
   import CardContents from "./CardContents.svelte";
 
-  let { onClick, ...rest }: FileCardProps = $props();
+  let { card }: Props = $props();
 </script>
 
-<CardContainer {...rest}>
+<CardContainer {card}>
   {#snippet children(containerButtons)}
-    <div class="auto-card-link-card" onclick={onClick}>
-      <CardContents {...rest}>
+    <div class="auto-card-link-card" onclick={card.onClick}>
+      <CardContents {card}>
         {#snippet buttons({ url })}
           {@render containerButtons()}
 

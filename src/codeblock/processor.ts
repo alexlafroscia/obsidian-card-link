@@ -96,10 +96,10 @@ export class CodeBlockProcessor extends MarkdownRenderChild {
         return isSelfReference
           ? // A "self" reference should link to the URL; otherwise the file contains
             // a link to itself, which isn't that useful!
-            new LinkCardCodeblockRenderer(props, this.context)
+            new LinkCardCodeblockRenderer({ card: props }, this.context)
           : // Otherwise, render a link to the file; the URL can be opened or copied
             // from the buttons in the card if the user wants that instead
-            new FileCardCodeblockRenderer(props, this.context);
+            new FileCardCodeblockRenderer({ card: props }, this.context);
       });
   }
 
@@ -107,7 +107,7 @@ export class CodeBlockProcessor extends MarkdownRenderChild {
     const card = fromCardStructure(structure);
     const linkCardProps = resolveComponentPropsFromCard(card, this.context.app);
 
-    return new LinkCardCodeblockRenderer(linkCardProps, this.context);
+    return new LinkCardCodeblockRenderer({ card: linkCardProps }, this.context);
   }
 
   private createErrorRenderer(messages: string[]) {

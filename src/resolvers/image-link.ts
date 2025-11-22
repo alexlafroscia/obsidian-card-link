@@ -4,7 +4,7 @@ import { ok } from "true-myth/result";
 
 import type { Card } from "../schema/card";
 import { ImageLink, URLPath } from "../schema/image-link";
-import type { CommonCardProps, CardProp } from "src/components/common";
+import type { LinkCard, CardProp } from "src/components/common";
 
 function resolveInternalImageLink(link: string, app: App): CardProp {
   const linkPath = getLinkpath(link);
@@ -56,7 +56,7 @@ type RequiredCardImageProperties = Pick<Card, "image" | "favicon" | "url">;
 export function extractImageProperties(
   props: RequiredCardImageProperties,
   app: App,
-): Pick<CommonCardProps, "image" | "favicon"> {
+): Pick<LinkCard, "image" | "favicon"> {
   const { image, favicon } = props;
 
   return {

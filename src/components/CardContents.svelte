@@ -3,16 +3,16 @@
   import { Notice } from "obsidian";
   import { fromResult } from "true-myth/toolbelt";
 
-  import type { CardProp, CommonCardProps } from "./common";
+  import type { CardProp, LinkCard } from "./common";
   import Button from "./obsidian/Button.svelte";
 
-  type CardPropValues = Record<keyof CommonCardProps, string | undefined>;
+  type CardPropValues = Record<keyof LinkCard, string | undefined>;
 
   function extractPropValue(prop: CardProp): string | undefined {
     return fromResult(prop).flatten().unwrapOr(undefined);
   }
 
-  function extractPropValuess(card: CommonCardProps): CardPropValues {
+  function extractPropValues(card: LinkCard): CardPropValues {
     return {
       title: extractPropValue(card.title),
       description: extractPropValue(card.description),
@@ -24,16 +24,17 @@
 </script>
 
 <script lang="ts">
-  interface Props extends CommonCardProps {
+  interface Props {
+    card: LinkCard;
     buttons?: Snippet<[CardPropValues]>;
   }
 
-  let { buttons, ...rest }: Props = $props();
+  let { buttons, card }: Props = $props();
 
-  let propValues = extractPropValuess(rest);
-  let { title, description, favicon, image, url } = propValues;
+  let propValues = $derived(extractPropValues(card));
+  let { title, description, favicon, image, url } = $derived(propValues);
 
-  let host = url ? new URL(url).hostname : undefined;
+  let host = $derived(url ? new URL(url).hostname : undefined);
 </script>
 
 <div class="auto-card-link-main">

@@ -1,6 +1,8 @@
 import { MarkdownRenderChild } from "obsidian";
 
-import FileCard, { type FileCardProps } from "../components/FileCard.svelte";
+import FileCard, {
+  type Props as FileCardProps,
+} from "../components/FileCard.svelte";
 import { SvelteComponentChild } from "../svelte-component-child";
 
 import type { RenderingContext } from "./processor";

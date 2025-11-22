@@ -1,16 +1,18 @@
 <script lang="ts">
   import Maybe, { nothing } from "true-myth/maybe";
 
-  import type { CommonCardProps } from "./common";
+  import type { LinkCard } from "./common";
 
-  export type LinkCardProps = CommonCardProps;
+  export type LinkCardProps = {
+    card: LinkCard;
+  };
 
   import CardContents from "./CardContents.svelte";
   import CardContainer from "./CardContainer.svelte";
 
-  let cardProps: LinkCardProps = $props();
+  let { card }: LinkCardProps = $props();
 
-  let href = cardProps.url
+  let href = card.url
     .match<Maybe<string>>({
       Err: () => nothing(),
       Ok: (maybeUrl) => maybeUrl,
@@ -18,10 +20,10 @@
     .unwrapOr(undefined);
 </script>
 
-<CardContainer {...cardProps}>
+<CardContainer {card}>
   {#snippet children(containerButtons)}
     <a class="auto-card-link-card" {href}>
-      <CardContents {...cardProps}>
+      <CardContents {card}>
         {#snippet buttons()}
           {@render containerButtons()}
         {/snippet}

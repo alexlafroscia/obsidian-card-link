@@ -2,7 +2,7 @@
   import type { Snippet } from "svelte";
   import { slide } from "svelte/transition";
 
-  import type { CommonCardProps } from "./common";
+  import type { LinkCard } from "./common";
 
   import Button from "./obsidian/Button.svelte";
   import CardErrors from "./CardErrors.svelte";
@@ -10,13 +10,16 @@
   type Buttons = Snippet;
   type Contents = Snippet<[Buttons]>;
 
-  interface Props extends CommonCardProps {
+  interface Props {
+    card: LinkCard;
     children: Contents;
   }
 
-  let { children, ...rest }: Props = $props();
+  let { children, card }: Props = $props();
 
-  let hasErrors = Object.values(rest).some((propValue) => propValue.isErr);
+  let hasErrors = $derived(
+    Object.values(card).some((propValue) => propValue.isErr)
+  );
   let showErrors = $state(false);
 </script>
 
@@ -41,7 +44,7 @@
 
   {#if showErrors}
     <div transition:slide>
-      <CardErrors {...rest} />
+      <CardErrors {card} />
     </div>
   {/if}
 </div>
