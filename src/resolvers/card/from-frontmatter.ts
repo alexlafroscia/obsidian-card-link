@@ -6,6 +6,7 @@ import { fromMaybe } from "true-myth/toolbelt";
 
 import type { FileCardProps } from "../../components/FileCard.svelte";
 import type { FileEmbedContents } from "../../schema/code-block-contents";
+import type { InternalLink } from "../../schema/internal-link";
 
 import { parseCardStructure } from "../../schema/card-structure";
 import { fromCardStructure, getFailureResultMessages } from "../../schema/card";
@@ -13,20 +14,15 @@ import { fromCardStructure, getFailureResultMessages } from "../../schema/card";
 import { resolveComponentPropsFromCard } from "../card-to-component-props";
 
 export function resolveFileReference(
-  value: FileEmbedContents,
+  link: InternalLink,
   app: App,
 ): Result<TFile, string> {
-  const { file: identifier } = value;
+  const { value: linkPath } = link;
 
   const sourceFile = maybeOf(app.workspace.getActiveFile());
-  const file =
-    typeof identifier === "string"
-      ? sourceFile
-      : sourceFile.andThen(({ path }) =>
-          maybeOf(
-            app.metadataCache.getFirstLinkpathDest(identifier.value, path),
-          ),
-        );
+  const file = sourceFile.andThen(({ path }) =>
+    maybeOf(app.metadataCache.getFirstLinkpathDest(linkPath, path)),
+  );
 
   return fromMaybe(`Could not resolve file \`${file}\``, file);
 }

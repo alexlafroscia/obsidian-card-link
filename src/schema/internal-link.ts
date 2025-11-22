@@ -42,3 +42,5 @@ export const InternalLink = z.codec(
     },
   },
 );
+
+export type InternalLink = z.infer<typeof InternalLink>;

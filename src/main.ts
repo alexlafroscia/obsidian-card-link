@@ -23,7 +23,9 @@ export default class ObsidianAutoCardLink extends Plugin {
     this.registerMarkdownCodeBlockProcessor(
       "cardlink",
       async (source, el, context) => {
-        context.addChild(new CodeBlockProcessor(source, this.app, el));
+        context.addChild(
+          new CodeBlockProcessor(source, el, context.sourcePath, this.app),
+        );
       },
     );
 

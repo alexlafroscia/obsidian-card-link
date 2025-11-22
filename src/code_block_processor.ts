@@ -14,21 +14,42 @@ import {
 } from "./resolvers/card/from-frontmatter";
 import { resolveComponentPropsFromCard } from "./resolvers/card-to-component-props";
 import { fromCardStructure, getFailureResultMessages } from "./schema/card";
+import type { InternalLink } from "./schema/internal-link";
 
 import FileCard from "./components/FileCard.svelte";
 import LinkCard from "./components/LinkCard.svelte";
 import Error from "./components/Error.svelte";
 
 export class CodeBlockProcessor extends MarkdownRenderChild {
+  /**
+   * The raw contents of the codeblock being rendered
+   */
   private source: string;
+
+  /**
+   * The path to the file rendering the codeblock
+   *
+   * This is necessary to resolve a "self"-referencing file card
+   */
+  private sourcePath: string;
+
   private app: App;
 
+  /**
+   * The rendered Svelte component
+   */
   private renderedComponent?: {};
 
-  constructor(source: string, app: App, containerEl: HTMLElement) {
+  constructor(
+    source: string,
+    containerEl: HTMLElement,
+    sourcePath: string,
+    app: App,
+  ) {
     super(containerEl);
 
     this.source = source;
+    this.sourcePath = sourcePath;
     this.app = app;
   }
 
@@ -66,11 +87,16 @@ export class CodeBlockProcessor extends MarkdownRenderChild {
   /**
    * Renders and returns the Svelte component used to render a file
    */
-  private renderCardForFile(contents: FileEmbedContents, el: HTMLElement) {
-    return fromResult(resolveFileReference(contents, this.app))
+  private renderCardForFile({ file }: FileEmbedContents, el: HTMLElement) {
+    const isSelfReference = file === "self";
+    const link: InternalLink = isSelfReference
+      ? { type: "internal", value: this.sourcePath }
+      : file;
+
+    return fromResult(resolveFileReference(link, this.app))
       .andThen((file) => resolveFileCardProps(file, this.app))
       .map((props) => {
-        return contents.file === "self"
+        return isSelfReference
           ? // A "self" reference should link to the URL; otherwise the file contains
             // a link to itself, which isn't that useful!
             mount(LinkCard, {
