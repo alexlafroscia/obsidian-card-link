@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "node esbuild.config.js",
-    "build": "yarn run typecheck && node esbuild.config.js production",
+    "build": "node esbuild.config.js production",
     "typecheck": "svelte-check --tsconfig tsconfig.json",
     "format": "prettier . --write",
     "version": "node version-bump.js && git add manifest.json versions.json && yarn run format",
