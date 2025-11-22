@@ -39,7 +39,6 @@ export interface Card {
   title: MaybeStringResult;
   description: MaybeStringResult;
   url: MaybeStringResult;
-  host: MaybeStringResult;
   image: MaybeImageLinkResult;
   favicon: MaybeImageLinkResult;
 }
@@ -63,7 +62,6 @@ export function fromCardStructure(structure: CardStructure): Card {
       getFailureResultMessages,
     ),
     url: parseString(structure.url).mapErr(getFailureResultMessages),
-    host: parseString(structure.host).mapErr(getFailureResultMessages),
     image: parseImageProperty(structure.image).mapErr(getFailureResultMessages),
     favicon: parseImageProperty(structure.favicon).mapErr(
       getFailureResultMessages,

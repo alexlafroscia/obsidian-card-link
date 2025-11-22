@@ -7,7 +7,6 @@ export type CommonCardProps = {
   title: CardProp;
   description: CardProp;
   url: CardProp;
-  host: CardProp;
   favicon: CardProp;
   image: CardProp;
 };

@@ -18,10 +18,6 @@ const VIEW_OPTIONS = {
     displayName: "URL",
     default: "note.url",
   },
-  host: {
-    displayName: "Host",
-    default: "note.host",
-  },
   image: {
     displayName: "Image",
     default: "note.image",

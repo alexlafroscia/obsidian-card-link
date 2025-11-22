@@ -18,7 +18,6 @@ import {
   parseImageProperty,
 } from "../../schema/card";
 
-import { enhanceCard } from "../card";
 import { makeOnClickHandler } from "./from-frontmatter";
 import { extractImageProperties } from "../image-link";
 
@@ -63,7 +62,6 @@ export function extractCardFromBasesEntry(
     title: getValueForProperty("title", config, entry),
     description: getValueForProperty("description", config, entry),
     url: getValueForProperty("url", config, entry),
-    host: getValueForProperty("host", config, entry),
     image: getValueForProperty("image", config, entry).andThen(
       extractImageLink,
     ),
@@ -83,7 +81,6 @@ export function resolveBasesEntryCardProps(
 
   return {
     ...card,
-    ...enhanceCard(card),
     ...extractImageProperties(card, app),
     onClick: makeOnClickHandler(file, app),
   };

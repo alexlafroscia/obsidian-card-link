@@ -13,7 +13,6 @@
       title: extractPropErrors(card.title),
       description: extractPropErrors(card.description),
       favicon: extractPropErrors(card.favicon),
-      host: extractPropErrors(card.host),
       image: extractPropErrors(card.image),
       url: extractPropErrors(card.url),
     };

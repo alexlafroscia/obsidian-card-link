@@ -55,7 +55,6 @@ export class CodeBlockGenerator {
       `url: ${encoded.url}`,
       `title: "${encoded.title}"`,
       linkMetadata.description && `description: "${encoded.description}"`,
-      linkMetadata.host && `host: ${encoded.host}`,
       linkMetadata.favicon && `favicon: ${encoded.favicon}`,
       linkMetadata.image && `image: ${encoded.image}`,
       "```\n",

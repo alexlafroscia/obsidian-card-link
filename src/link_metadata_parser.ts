@@ -26,7 +26,6 @@ export class LinkMetadataParser {
       .replace(/\\/g, "\\\\")
       .replace(/"/g, '\\"')
       .trim();
-    const { hostname } = new URL(this.url);
     const favicon = await this.getFavicon();
     const image = await this.getImage();
 
@@ -34,7 +33,6 @@ export class LinkMetadataParser {
       url: this.url,
       title: title,
       description: description,
-      host: hostname,
       favicon,
       image,
     };

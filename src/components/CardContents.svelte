@@ -17,7 +17,6 @@
       title: extractPropValue(card.title),
       description: extractPropValue(card.description),
       favicon: extractPropValue(card.favicon),
-      host: extractPropValue(card.host),
       image: extractPropValue(card.image),
       url: extractPropValue(card.url),
     };
@@ -32,7 +31,9 @@
   let { buttons, ...rest }: Props = $props();
 
   let propValues = extractPropValuess(rest);
-  let { title, description, favicon, host, image, url } = propValues;
+  let { title, description, favicon, image, url } = propValues;
+
+  let host = url ? new URL(url).hostname : undefined;
 </script>
 
 <div class="auto-card-link-main">

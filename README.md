@@ -25,7 +25,6 @@ The code block `cardlink` uses YAML syntax for displaying card-styled link.
 | url         | true     | url to open when you click the link      |
 | title       | true     | title of the link                        |
 | description | false    | description of the link                  |
-| host        | false    | host of the link                         |
 | favicon     | false    | favicon of the link                      |
 | image       | false    | thumbnail image to show in the card link |
 
@@ -36,7 +35,6 @@ The code block `cardlink` uses YAML syntax for displaying card-styled link.
 url: https://obsidian.md/
 title: "Obsidian"
 description: "Obsidian: A knowledge base that works on local Markdown files."
-host: obsidian.md
 favicon: https://obsidian.md/favicon.ico
 image: https://obsidian.md/images/banner.png
 ​```

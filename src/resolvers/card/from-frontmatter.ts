@@ -10,7 +10,6 @@ import type { FileEmbedContents } from "../../schema/code-block-contents";
 import { parseCardStructure } from "../../schema/card-structure";
 import { fromCardStructure, getFailureResultMessages } from "../../schema/card";
 
-import { enhanceCard } from "../card";
 import { extractImageProperties } from "../image-link";
 
 export function resolveFileReference(
@@ -58,7 +57,6 @@ export function resolveFileCardProps(
     .map((cardStructure) => fromCardStructure(cardStructure))
     .map((card) => ({
       ...card,
-      ...enhanceCard(card),
       ...extractImageProperties(card, app),
       onClick: makeOnClickHandler(file, app),
     }));
