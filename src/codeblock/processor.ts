@@ -1,6 +1,8 @@
 import { App, MarkdownRenderChild, parseYaml } from "obsidian";
+import { of as maybeOf } from "true-myth/maybe";
 import { ok, tryOr } from "true-myth/result";
-import { fromResult } from "true-myth/task";
+import { fromResult as taskFromResult } from "true-myth/task";
+import { fromMaybe, fromResult as maybeFromResult } from "true-myth/toolbelt";
 
 import {
   type FileEmbedContents,
@@ -11,6 +13,7 @@ import type { CardStructure } from "../schema/card-structure";
 import type { InternalLink } from "../schema/internal-link";
 
 import {
+  getFrontmatter,
   resolveFileCardProps,
   resolveFileReference,
 } from "../resolvers/card/from-frontmatter";
@@ -53,7 +56,7 @@ export class CodeBlockProcessor extends MarkdownRenderChild {
   }
 
   async onload() {
-    const cardView = await fromResult(
+    const cardView = await taskFromResult(
       tryOr("Failed to parse YAML", () => parseYaml(this.source)),
     )
       .andThen((yaml) => parseCodeblockContents(yaml))
@@ -90,16 +93,46 @@ export class CodeBlockProcessor extends MarkdownRenderChild {
       ? { type: "internal", value: this.sourcePath }
       : file;
 
-    return fromResult(resolveFileReference(link, this.context.app))
-      .andThen((file) => resolveFileCardProps(file, this.context.app))
+    return resolveFileReference(link, this.context.app)
+      .andThen((file) =>
+        fromMaybe(
+          [`Frontmatter for "${file.vault}" not loaded into cache`],
+          getFrontmatter(file, this.context.app),
+        ).map((frontmatter) => [file, frontmatter] as const),
+      )
+      .andThen(([file, frontmatter]) =>
+        resolveFileCardProps(frontmatter, file, this.context.app),
+      )
       .map((props) => {
-        return isSelfReference
+        const codeblockRenderer = isSelfReference
           ? // A "self" reference should link to the URL; otherwise the file contains
             // a link to itself, which isn't that useful!
             new LinkCardCodeblockRenderer({ card: props }, this.context)
           : // Otherwise, render a link to the file; the URL can be opened or copied
             // from the buttons in the card if the user wants that instead
             new FileCardCodeblockRenderer({ card: props }, this.context);
+
+        this.registerEvent(
+          this.context.app.metadataCache.on(
+            "changed",
+            (file, _data, { frontmatter }) => {
+              if (file.path === link.value) {
+                const maybeUpdatedProps = maybeOf(frontmatter).andThen(
+                  (frontmatter) =>
+                    maybeFromResult(
+                      resolveFileCardProps(frontmatter, file, this.context.app),
+                    ),
+                );
+
+                if (maybeUpdatedProps.isJust) {
+                  codeblockRenderer.setProps({ card: maybeUpdatedProps.value });
+                }
+              }
+            },
+          ),
+        );
+
+        return codeblockRenderer;
       });
   }
 

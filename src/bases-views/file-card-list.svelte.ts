@@ -10,15 +10,18 @@ import { SvelteComponentChild } from "../svelte-component-child";
 export class FileCardListView extends BasesView {
   type = "FileCardListView";
 
-  private fileCardListProps = $state<FileCardListProps>({ cards: [] });
+  private fileCardList: SvelteComponentChild<FileCardListProps>;
 
   constructor(controller: QueryController, containerEl: HTMLElement) {
     super(controller);
 
-    this.addChild(
+    const initialProps: FileCardListProps = {
+      cards: [],
+    };
+    this.fileCardList = this.addChild(
       new SvelteComponentChild(FileCardList, {
         target: containerEl.createDiv(),
-        props: this.fileCardListProps,
+        props: initialProps,
       }),
     );
   }
@@ -28,8 +31,6 @@ export class FileCardListView extends BasesView {
       resolveBasesEntryCardProps(entry, this.config, this.app),
     );
 
-    // Mutating the `$state` values passed as the props will automatically
-    // cause the component to re-render
-    this.fileCardListProps.cards = cards;
+    this.fileCardList.setProps({ cards });
   }
 }

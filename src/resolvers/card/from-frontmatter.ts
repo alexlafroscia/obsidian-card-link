@@ -1,7 +1,6 @@
-import { App, Keymap, TFile } from "obsidian";
-import { just, of as maybeOf } from "true-myth/maybe";
+import { App, Keymap, TFile, type FrontMatterCache } from "obsidian";
+import Maybe, { just, of as maybeOf } from "true-myth/maybe";
 import Result from "true-myth/result";
-import Task, { fromPromise } from "true-myth/task";
 import { fromMaybe } from "true-myth/toolbelt";
 
 import type { FileCard } from "../../components/common";
@@ -32,23 +31,19 @@ export function makeOnClickHandler(file: TFile, app: App) {
   };
 }
 
+export function getFrontmatter(file: TFile, app: App): Maybe<FrontMatterCache> {
+  return maybeOf(app.metadataCache.getFileCache(file)).andThen((cache) =>
+    maybeOf(cache.frontmatter),
+  );
+}
+
 export function resolveFileCardProps(
+  frontmatter: FrontMatterCache,
   file: TFile,
   app: App,
-): Task<FileCard, string[]> {
-  const resolveFrontmatter = new Promise((resolve) => {
-    app.fileManager.processFrontMatter(file, (frontmatter) => {
-      resolve(frontmatter);
-    });
-  });
-  const resolveFrontmatterTask = fromPromise(resolveFrontmatter).mapRejected(
-    () => [`Frontmatter could not be resolved`],
-  );
-
-  return resolveFrontmatterTask
-    .andThen((frontmatter) =>
-      parseCardStructure(frontmatter).mapErr(getFailureResultMessages),
-    )
+): Result<FileCard, string[]> {
+  return parseCardStructure(frontmatter)
+    .mapErr(getFailureResultMessages)
     .map((cardStructure) => fromCardStructure(cardStructure))
     .map((card) => ({
       ...resolveComponentPropsFromCard(card, app),

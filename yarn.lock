@@ -1265,6 +1265,7 @@ __metadata:
     prettier: "npm:^3.6.2"
     svelte: "npm:^5.43.12"
     svelte-check: "npm:^4.3.4"
+    svelte-imperative: "npm:^3.0.0"
     svelte-preprocess: "npm:^6.0.3"
     true-myth: "npm:^9.2.0"
     tslib: "npm:^2.8.1"
@@ -1528,6 +1529,15 @@ __metadata:
   bin:
     svelte-check: bin/svelte-check
   checksum: 10c0/c84a054daa2bdd377357082eb317ae86dabfc935a8b67867588c8a4e98ad644b67d3aa0f8572bf37cec3a2c37cae0b60632b430dc9d98faff9981efe74e0ca95
+  languageName: node
+  linkType: hard
+
+"svelte-imperative@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "svelte-imperative@npm:3.0.0"
+  peerDependencies:
+    svelte: ^5.0.0
+  checksum: 10c0/1e9de32f68fd54d7c5925d888c8a75d64b50a4e3d764ff8f8a033d849353c5da2f75552242adad8814b15f70645e14c429e2f2151f5eff0fbc32b3a0732dfb6f
   languageName: node
   linkType: hard
 

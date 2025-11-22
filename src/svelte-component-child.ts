@@ -1,32 +1,43 @@
 import { MarkdownRenderChild } from "obsidian";
-import { type MountOptions, type Component, mount, unmount } from "svelte";
+import { ImperativeComponent } from "svelte-imperative";
+import type { Component } from "svelte";
+
+interface Options<Props> {
+  props: Props;
+  target: HTMLElement;
+}
 
 export class SvelteComponentChild<
   Props extends Record<string, any>,
 > extends MarkdownRenderChild {
   private component: Component<Props>;
-  private options: MountOptions<Props>;
+  private options: Options<Props>;
 
-  private renderedComponent: {} | undefined;
+  private renderedComponent: ImperativeComponent<Props> | undefined;
 
-  constructor(component: Component<Props>, options: MountOptions<Props>) {
-    super(options.target as HTMLElement);
+  constructor(component: Component<Props>, options: Options<Props>) {
+    super(options.target);
 
     this.component = component;
-    this.options = {
-      ...options,
-    };
+    this.options = options;
   }
 
   onload(): void {
-    this.renderedComponent = mount(this.component, {
-      ...this.options,
-    });
+    this.renderedComponent = new ImperativeComponent(
+      this.options.target,
+      this.component,
+      this.options.props,
+    );
   }
 
   onunload(): void {
-    if (this.renderedComponent) {
-      unmount(this.renderedComponent);
-    }
+    this.renderedComponent?.destroy();
+  }
+
+  /**
+   * Update the properties of the rendered component
+   */
+  setProps(props: Props) {
+    this.renderedComponent?.setProps(props);
   }
 }

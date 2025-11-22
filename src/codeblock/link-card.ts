@@ -6,14 +6,20 @@ import { SvelteComponentChild } from "../svelte-component-child";
 import type { RenderingContext } from "./processor";
 
 export class LinkCardCodeblockRenderer extends MarkdownRenderChild {
+  private svelteComponent: SvelteComponentChild<LinkCardProps>;
+
   constructor(props: LinkCardProps, context: RenderingContext) {
     super(context.containerEl);
 
-    this.addChild(
+    this.svelteComponent = this.addChild(
       new SvelteComponentChild(LinkCard, {
         target: context.containerEl,
         props,
       }),
     );
+  }
+
+  setProps(props: LinkCardProps) {
+    this.svelteComponent.setProps(props);
   }
 }
