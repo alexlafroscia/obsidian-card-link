@@ -1,3 +1,5 @@
+import "./global.css";
+
 import { Plugin, MarkdownView, Editor, Menu, MenuItem } from "obsidian";
 
 import {

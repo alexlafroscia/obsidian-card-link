@@ -1,5 +1,6 @@
 node_modules
 main.js
+styles.css
 
 # Yarn 3 (w/o Zero-Installs)
 .pnp.*

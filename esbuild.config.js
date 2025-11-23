@@ -1,3 +1,5 @@
+import * as fs from "node:fs/promises";
+
 import esbuild from "esbuild";
 import process from "process";
 import builtins from "builtin-modules";
@@ -15,9 +17,18 @@ const prod = process.argv[2] === "production";
 const context = await esbuild.context({
   plugins: [
     esbuildSvelte({
-      compilerOptions: { css: "injected" },
+      compilerOptions: { css: "external" },
       preprocess: sveltePreprocess(),
     }),
+
+    {
+      name: "rename-css-output-file",
+      setup(build) {
+        build.onEnd(async () => {
+          await fs.rename("./main.css", "./styles.css");
+        });
+      },
+    },
   ],
   banner: {
     js: banner,
