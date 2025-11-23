@@ -7,7 +7,7 @@ import { ImageLink } from "./image-link";
 import type { CardStructure } from "./card-structure";
 
 const MaybeString = z.pipe(
-  z.optional(z.string()),
+  z.nullish(z.string()),
   z.transform((value) => maybeOf(value)),
 );
 
@@ -15,12 +15,12 @@ type MaybeString = z.infer<typeof MaybeString>;
 
 export type MaybeStringResult = Result<MaybeString, string[]>;
 
+const parseString = parserFor(MaybeString);
+
 const MaybeImageLink = z.pipe(
-  z.optional(ImageLink),
+  z.nullish(ImageLink),
   z.transform((value) => maybeOf(value)),
 );
-
-const parseString = parserFor(MaybeString);
 
 type MaybeImageLink = z.infer<typeof MaybeImageLink>;
 

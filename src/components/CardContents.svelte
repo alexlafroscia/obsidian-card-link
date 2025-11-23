@@ -55,9 +55,7 @@
       <img class="auto-card-link-favicon" src={favicon} alt="Favicon" />
     {/if}
 
-    {#if host}
-      <span>{host}</span>
-    {/if}
+    <span>{host}</span>
 
     <div class="link-card-button-container">
       {@render buttons?.(propValues)}
