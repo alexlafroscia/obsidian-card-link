@@ -24,23 +24,17 @@ const UnquotedInternalLink = z.pipe(
   }),
 );
 
-export const InternalLink = z.codec(
+export const InternalLink = z.pipe(
   z.union(
     [QuotedInternalLink, UnquotedInternalLink],
     "Value must be an internal Obsidian link",
   ),
-  z.object({
-    type: z.literal("internal"),
-    value: z.string(),
+  z.transform((value) => {
+    return {
+      type: "internal" as const,
+      value,
+    };
   }),
-  {
-    decode(value) {
-      return { type: "internal" as const, value };
-    },
-    encode(value) {
-      return `"[[${value}]]"`;
-    },
-  },
 );
 
 export type InternalLink = z.infer<typeof InternalLink>;
