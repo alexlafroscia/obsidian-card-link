@@ -11,31 +11,6 @@
   --auto-card-link-button-width: calc(var(--icon-size) + var(--size-2-3));
 
   --auto-card-link-indent-size: 2.5em;
-
-  &[data-auto-card-link-depth="0"] {
-    margin-left: calc(var(--auto-card-link-indent-size) * 0);
-  }
-  &[data-auto-card-link-depth="1"] {
-    margin-left: calc(var(--auto-card-link-indent-size) * 1);
-  }
-  &[data-auto-card-link-depth="2"] {
-    margin-left: calc(var(--auto-card-link-indent-size) * 2);
-  }
-  &[data-auto-card-link-depth="3"] {
-    margin-left: calc(var(--auto-card-link-indent-size) * 3);
-  }
-  &[data-auto-card-link-depth="4"] {
-    margin-left: calc(var(--auto-card-link-indent-size) * 4);
-  }
-  &[data-auto-card-link-depth="5"] {
-    margin-left: calc(var(--auto-card-link-indent-size) * 5);
-  }
-  &[data-auto-card-link-depth="6"] {
-    margin-left: calc(var(--auto-card-link-indent-size) * 6);
-  }
-  &[data-auto-card-link-depth="7"] {
-    margin-left: calc(var(--auto-card-link-indent-size) * 7);
-  }
 }
 
 @container (max-width: 300px) {

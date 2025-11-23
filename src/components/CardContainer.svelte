@@ -39,7 +39,7 @@
   {/if}
 {/snippet}
 
-<div class="auto-card-link-container" data-auto-card-link-depth="0">
+<div class="auto-card-link-container">
   {@render children(buttons)}
 
   {#if showErrors}
