@@ -89,22 +89,27 @@
   }
 
   .link-card-thumbnail {
-    border-radius: var(--radius-s) 0 0 var(--radius-s) !important;
+    border-radius: var(--radius-s) var(--radius-s) 0 0 !important;
     pointer-events: none;
     aspect-ratio: 2 / 1;
     object-fit: cover;
+
+    @container card-container (width > 500px) {
+      border-radius: var(--radius-s) 0 0 var(--radius-s) !important;
+      max-width: 16em !important;
+    }
   }
 
   .link-card-details {
     display: grid;
     grid-template-columns: 1fr var(--button-container-safe-width, auto);
-    grid-template-rows: auto 1fr auto;
+    grid-template-rows: auto 1fr var(--button-container-safe-height, auto);
     grid-template-areas:
       "title title"
       "description description"
       "host .";
     gap: var(--size-2-2);
-    padding: var(--size-2-2);
+    padding: var(--size-2-3);
     flex-grow: 1;
   }
 
@@ -126,8 +131,8 @@
   }
 
   .link-card-host {
-    align-items: center;
     display: flex;
+    align-items: end;
     flex-direction: row;
     font-size: var(--font-smallest);
     grid-area: host;

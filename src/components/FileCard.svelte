@@ -69,11 +69,12 @@
     font-size: unset;
     font-weight: unset;
     height: unset;
-    padding: unset;
+    padding: unset !important;
+    white-space: unset;
 
     /* Styling we actually need */
     cursor: pointer;
-    display: block;
+    display: block !important;
     text-align: start;
     width: 100%;
   }

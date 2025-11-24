@@ -62,6 +62,9 @@
     --button-container-safe-width: calc(
       3 * (2 * var(--size-2-3) + var(--icon-size))
     );
+    --button-container-safe-height: calc(
+      1 * (2 * var(--size-2-2) + var(--icon-size))
+    );
 
     /* Allows button container positioning */
     position: relative;
