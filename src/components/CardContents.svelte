@@ -70,8 +70,7 @@
 <style>
   .link-card-contents {
     display: flex;
-    height: 8em;
-    max-height: 8em;
+    flex-direction: column;
     transition: 20ms ease-in 0s;
     color: var(--link-external-color);
     background: var(--background-primary-alt);
@@ -82,13 +81,18 @@
       background: var(--background-modifier-hover);
       border-color: var(--background-modifier-hover);
     }
+
+    @container card-container (width > 500px) {
+      flex-direction: row;
+      height: 8em;
+    }
   }
 
   .link-card-thumbnail {
-    max-height: 100%;
     border-radius: var(--radius-s) 0 0 var(--radius-s) !important;
-    object-fit: cover;
     pointer-events: none;
+    aspect-ratio: 2 / 1;
+    object-fit: cover;
   }
 
   .link-card-details {

@@ -53,6 +53,7 @@
 
 <style>
   .link-card-container {
+    container: card-container / inline-size;
     overflow: hidden;
     user-select: none;
   }
