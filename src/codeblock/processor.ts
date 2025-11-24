@@ -96,7 +96,7 @@ export class CodeBlockProcessor extends MarkdownRenderChild {
     return resolveFileReference(link, this.context.app)
       .andThen((file) =>
         fromMaybe(
-          [`Frontmatter for "${file.vault}" not loaded into cache`],
+          [`Frontmatter for "${link.value}" not loaded into cache`],
           getFrontmatter(file, this.context.app),
         ).map((frontmatter) => [file, frontmatter] as const),
       )
