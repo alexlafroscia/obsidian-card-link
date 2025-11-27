@@ -3,7 +3,7 @@ import { MarkdownRenderChild } from "obsidian";
 import LinkCard, { type LinkCardProps } from "../components/LinkCard.svelte";
 import { SvelteComponentChild } from "../svelte-component-child";
 
-import type { RenderingContext } from "./processor";
+import type { RenderingContext } from ".";
 
 export class LinkCardCodeblockRenderer extends MarkdownRenderChild {
   private svelteComponent: SvelteComponentChild<LinkCardProps>;

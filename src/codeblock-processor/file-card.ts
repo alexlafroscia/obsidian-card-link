@@ -5,7 +5,7 @@ import FileCard, {
 } from "../components/FileCard.svelte";
 import { SvelteComponentChild } from "../svelte-component-child";
 
-import type { RenderingContext } from "./processor";
+import type { RenderingContext } from ".";
 
 export class FileCardCodeblockRenderer extends MarkdownRenderChild {
   private svelteComponent: SvelteComponentChild<FileCardProps>;

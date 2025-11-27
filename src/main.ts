@@ -12,7 +12,7 @@ import { CheckIf } from "src/checkif";
 import { CodeBlockGenerator } from "src/code_block_generator";
 import { linkRegex } from "src/regex";
 
-import { CodeBlockProcessor } from "./codeblock/processor";
+import { CodeBlockProcessor } from "./codeblock-processor";
 import { FileCardListView } from "./bases-views/file-card-list.svelte";
 import { getViewOptions } from "./bases-views/file-card-list-config";
 
