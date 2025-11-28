@@ -1,6 +1,7 @@
 import "./global.css";
 
-import { Plugin, MarkdownView, Editor, Menu, MenuItem } from "obsidian";
+import { Plugin, MarkdownView, Editor, Menu, MenuItem, Notice } from "obsidian";
+import Task from "true-myth/task";
 
 import {
   type ObsidianAutoCardLinkSettings,
@@ -9,12 +10,18 @@ import {
 } from "src/settings";
 import { EditorExtensions } from "src/editor_enhancements";
 import { CheckIf } from "src/checkif";
-import { CodeBlockGenerator } from "src/code_block_generator";
 import { linkRegex } from "src/regex";
 
+import { convertUrlToCodeBlock } from "./codeblock-generator";
 import { CodeBlockProcessor } from "./codeblock-processor";
 import { FileCardListView } from "./bases-views/file-card-list.svelte";
 import { getViewOptions } from "./bases-views/file-card-list-config";
+
+function notifyUserOfError<T>(task: Task<T, string>): Task<T, void> {
+  return task.mapRejected((error) => {
+    new Notice(error);
+  });
+}
 
 export default class ObsidianAutoCardLink extends Plugin {
   settings?: ObsidianAutoCardLinkSettings;
@@ -77,18 +84,14 @@ export default class ObsidianAutoCardLink extends Plugin {
   }
 
   private enhanceSelectedURL(editor: Editor): void {
-    const selectedText = (
-      EditorExtensions.getSelectedText(editor) || ""
-    ).trim();
-
-    const codeBlockGenerator = new CodeBlockGenerator(editor);
+    const selectedText = EditorExtensions.getSelectedText(editor).trim();
 
     for (const line of selectedText.split(/[\n ]/)) {
       if (CheckIf.isUrl(line)) {
-        codeBlockGenerator.convertUrlToCodeBlock(line);
+        notifyUserOfError(convertUrlToCodeBlock(editor, line));
       } else if (CheckIf.isLinkedUrl(line)) {
         const url = this.getUrlFromLink(line);
-        codeBlockGenerator.convertUrlToCodeBlock(url);
+        notifyUserOfError(convertUrlToCodeBlock(editor, url));
       }
     }
   }
@@ -115,9 +118,7 @@ export default class ObsidianAutoCardLink extends Plugin {
       return;
     }
 
-    const codeBlockGenerator = new CodeBlockGenerator(editor);
-    await codeBlockGenerator.convertUrlToCodeBlock(clipboardText);
-    return;
+    await notifyUserOfError(convertUrlToCodeBlock(editor, clipboardText));
   }
 
   private onPaste = async (
@@ -149,9 +150,7 @@ export default class ObsidianAutoCardLink extends Plugin {
     evt.stopPropagation();
     evt.preventDefault();
 
-    const codeBlockGenerator = new CodeBlockGenerator(editor);
-    await codeBlockGenerator.convertUrlToCodeBlock(clipboardText);
-    return;
+    await notifyUserOfError(convertUrlToCodeBlock(editor, clipboardText));
   };
 
   private onEditorMenu = (menu: Menu) => {
