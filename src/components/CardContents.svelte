@@ -133,7 +133,10 @@
   .link-card-details {
     display: grid;
     grid-template-columns: 1fr var(--button-container-safe-width, auto);
-    grid-template-rows: auto 1fr var(--button-container-safe-height, auto);
+    grid-template-rows: min-content auto max(
+        min-content,
+        var(--button-container-safe-height, auto)
+      );
     grid-template-areas:
       "title title"
       "description description"
@@ -158,6 +161,7 @@
     grid-area: description;
     color: var(--text-muted);
     font-size: var(--font-smallest);
+    overflow: hidden;
   }
 
   .link-card-host {
